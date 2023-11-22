@@ -11,7 +11,15 @@ import SwiftUI
 struct XctaApp: App {
     var body: some Scene {
         WindowGroup {
-            Text("Hello")
+            NavigationView {
+                ProductsView(
+                    viewModel: ProductsViewModel(
+                        service: ProductsWorker()
+                    )
+                )
+                .toolbar { CartToolbarItemView() }
+                .navigationBarTitleDisplayMode(.inline)
+            }
         }
     }
 }
