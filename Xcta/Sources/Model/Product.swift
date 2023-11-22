@@ -17,8 +17,7 @@ struct Product {
     var sale: Bool
     
     struct Size {
-        var available: Bool
-        var size: String
+        var title: String
         var sku: String
     }
 }

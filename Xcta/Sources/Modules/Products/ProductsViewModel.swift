@@ -9,8 +9,13 @@ import Foundation
 
 protocol ProductsViewModelProtocol: ObservableObject {
     var viewData: ProductsViewData { get set }
+    var showAlertAddCart: Bool { get set }
+    var selectedProduct: Product? { get set }
     var viewState: ViewState { get set }
     func loadProducts() async
+    func tapProduct(_ product: Product)
+    func setSelectedSize(_ size: Product.Size)
+    func addProduct(to cart: Cart)
 }
 
 final class ProductsViewModel: ProductsViewModelProtocol {
@@ -22,10 +27,13 @@ final class ProductsViewModel: ProductsViewModelProtocol {
     // MARK: - ViewState conforms
     
     var viewState: ViewState = .ready
+    var selectedProduct: Product?
+    var selectedSize: Product.Size?
     
     // MARK: - Internal properties
     
     @Published var viewData: ProductsViewData
+    @Published var showAlertAddCart = false
     
     // MARK: - Initializer
     
@@ -46,6 +54,31 @@ final class ProductsViewModel: ProductsViewModelProtocol {
         }
     }
     
+    func tapProduct(_ product: Product) {
+        selectedProduct = product
+        showAlertAddCart.toggle()
+    }
+    
+    func setSelectedSize(_ size: Product.Size) {
+        selectedSize = size
+    }
+    
+    func addProduct(to cart: Cart) {
+        guard let selectedProduct, let selectedSize else { return }
+        cart.add(
+            product: CartItem(
+                productId: selectedProduct.id,
+                image: selectedProduct.image,
+                title: selectedProduct.title,
+                price: selectedProduct.promotionalValue ?? selectedProduct.value,
+                size: Product.Size(
+                    title: selectedSize.title,
+                    sku: selectedSize.sku
+                )
+            )
+        )
+    }
+    
     // MARK: - Private methods
     
     @MainActor private func handleViewData(_ data: Data) throws {
@@ -56,10 +89,11 @@ final class ProductsViewModel: ProductsViewModelProtocol {
                 title: $0.name,
                 value: $0.regularPrice,
                 promotionalValue: $0.actualPrice,
-                availableSizes: $0.sizes.map {
+                availableSizes: $0.sizes.filter {
+                    $0.available
+                }.map {
                     Product.Size(
-                        available: $0.available,
-                        size: $0.size,
+                        title: $0.size,
                         sku: $0.sku
                     )
                 },

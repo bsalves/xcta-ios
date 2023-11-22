@@ -6,10 +6,8 @@
 //
 
 import Foundation
-import UIKit.UIImage
 
 struct ProductsViewData {
-    var viewTitle = "Hello viewData"
+    var viewTitle = "Produtos"
     var items = [Product]()
-    
 }

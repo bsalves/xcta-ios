@@ -7,23 +7,15 @@
 
 import Foundation
 
-final class Cart {
+final class Cart: ObservableObject {
     
-    public static var shared = Cart()
+    @Published var products = [CartItem]()
     
-    private var products = [Product]()
-    
-    private init() { }
-    
-    func add(product: Product) {
+    func add(product: CartItem) {
         products.append(product)
     }
     
-    func remove(product: Product) {
+    func remove(product: CartItem) {
         products.removeAll { $0.id == product.id }
-    }
-    
-    func itemsAtCart() -> Int {
-        products.count
     }
 }

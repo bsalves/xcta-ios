@@ -7,12 +7,34 @@
 
 import SwiftUI
 
-struct CartView: View {
+struct CartView<ViewModel: CartViewModelProtocol>: View {
+    
+    @ObservedObject var viewModel: ViewModel
+    @EnvironmentObject var cart: Cart
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        ScrollView {
+            VStack {
+                ForEach(cart.products, id: \.id) { item in
+//                    CartItemView(
+//                        imageURL: item.image,
+//                        title: item.title,
+//                        price: item.price,
+//                        size: item.size
+//                    )
+//                    .frame(maxWidth: .infinity)
+                }
+            }
+            .frame(maxWidth: .infinity)
+        }
+        .navigationTitle(viewModel.viewData.viewTitle)
     }
 }
 
 #Preview {
-    CartView()
+    CartView(
+        viewModel: CartViewModel(
+            viewData: CartViewData()
+        )
+    )
 }

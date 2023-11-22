@@ -12,6 +12,7 @@ struct ProductsView<ViewModel: ProductsViewModelProtocol>: View {
     // MARK: - Private property
     
     @StateObject var viewModel: ViewModel
+    @EnvironmentObject var cart: Cart
     
     var body: some View {
         ZStack {
@@ -26,6 +27,17 @@ struct ProductsView<ViewModel: ProductsViewModelProtocol>: View {
         }
         .navigationTitle(viewModel.viewData.viewTitle)
         .task { await viewModel.loadProducts() }
+        .confirmationDialog("Adicionar ao carrinho?", isPresented: $viewModel.showAlertAddCart) {
+            
+            if let selectedProduct = viewModel.selectedProduct {
+                ForEach(selectedProduct.availableSizes, id: \.title) { size in
+                    Button(size.title) {
+                        viewModel.setSelectedSize(size)
+                        viewModel.addProduct(to: cart)
+                    }
+                }
+            }
+        }
     }
     
     private var content: some View {
@@ -37,8 +49,9 @@ struct ProductsView<ViewModel: ProductsViewModelProtocol>: View {
                         title: item.title,
                         regularPrice: item.value,
                         actualPrice: item.promotionalValue,
-                        sizes: item.availableSizes.map { $0.size }
+                        sizes: item.availableSizes.map { $0.title }
                     )
+                    .onTapGesture { viewModel.tapProduct(item) }
                 }
             })
             .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -59,8 +72,7 @@ struct ProductsView<ViewModel: ProductsViewModelProtocol>: View {
                         promotionalValue: "$ 9,99",
                         availableSizes: [
                             Product.Size(
-                                available: true,
-                                size: "P",
+                                title: "P",
                                 sku: "000_P"
                             )
                         ],
@@ -73,8 +85,7 @@ struct ProductsView<ViewModel: ProductsViewModelProtocol>: View {
                         promotionalValue: "$ 9,99",
                         availableSizes: [
                             Product.Size(
-                                available: true,
-                                size: "P",
+                                title: "P",
                                 sku: "000_P"
                             )
                         ],

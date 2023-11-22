@@ -1,19 +1,18 @@
 //
-//  ProductItemView.swift
+//  CartItemView.swift
 //  Xcta
 //
-//  Created by Bruno Alves on 21/11/23.
+//  Created by Bruno Alves on 22/11/23.
 //
 
 import SwiftUI
 
-struct ProductItemView: View {
+struct CartItemView: View {
     
     var imageURL: String
     var title: String
-    var regularPrice: String
-    var actualPrice: String?
-    var sizes: [String]
+    var price: String
+    var size: Product.Size
     
     var body: some View {
         HStack(alignment: .top, spacing: 14) {
@@ -42,29 +41,11 @@ struct ProductItemView: View {
                 Text(title)
                 Spacer()
                 VStack(alignment: .leading) {
-                    if let actualPrice {
-                        Text(regularPrice)
-                            .strikethrough()
-                            .font(.caption)
-                        Text(actualPrice)
-                            .font(.title2)
-                    } else {
-                        Text(regularPrice)
-                            .font(.title2)
-                        Spacer()
-                    }
+                    Text(price)
+                        .strikethrough()
+                        .font(.caption)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
-                Spacer()
-                HStack {
-                    ForEach(sizes, id: \.self) { size in
-                        ZStack {
-                            Text(size)
-                        }
-                        .frame(width: 26, height: 26)
-                        .border(Color.black)
-                    }
-                }
             }
             .frame(maxWidth: .infinity, maxHeight: 120, alignment: .leading)
         }
@@ -73,11 +54,10 @@ struct ProductItemView: View {
 }
 
 #Preview {
-    ProductItemView(
+    CartItemView(
         imageURL: "https://d3l7rqep7l31az.cloudfront.net/images/products/20002605_615_catalog_1.jpg?1460136912",
         title: "Calça",
-        regularPrice: "$ 1,99",
-        actualPrice: "$ 0,99",
-        sizes: ["X", "P", "M"]
+        price: "$ 1,99",
+        size: Product.Size(title: "P", sku: "000_P")
     )
 }

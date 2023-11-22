@@ -9,6 +9,9 @@ import SwiftUI
 
 @main
 struct XctaApp: App {
+    
+    var cart = Cart()
+    
     var body: some Scene {
         WindowGroup {
             NavigationView {
@@ -17,7 +20,11 @@ struct XctaApp: App {
                         service: ProductsWorker()
                     )
                 )
-                .toolbar { CartToolbarItemView() }
+                .environmentObject(cart)
+                .toolbar {
+                    CartToolbarItemView()
+                        .environmentObject(cart)
+                }
                 .navigationBarTitleDisplayMode(.inline)
             }
         }
