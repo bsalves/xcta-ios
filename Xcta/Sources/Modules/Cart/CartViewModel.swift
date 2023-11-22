@@ -7,19 +7,27 @@
 
 import Foundation
 
-protocol CartViewModelProtocol: ObservableObject {
-    var viewData: CartViewData { get set }
-}
-
-final class CartViewModel: CartViewModelProtocol {
+final class CartViewModel: ObservableObject {
     
-    // MARK: - Publishers
+    @Published var products: [CartItem]
     
-    @Published var viewData: CartViewData
+    init(products: [CartItem] = [CartItem]()) {
+        self.products = products
+    }
     
-    // MARK: - Initializer
+    func addProduct(_ product: Product, size: Product.Size) {
+        products.append(
+            CartItem(
+                productId: product.id,
+                image: product.image,
+                title: product.title,
+                price: product.promotionalValue ?? product.value,
+                size: size
+            )
+        )
+    }
     
-    init(viewData: CartViewData) {
-        self.viewData = viewData
+    func removeProduct(_ product: CartItem) {
+//        products.removeAll { $0.id == product.id }
     }
 }

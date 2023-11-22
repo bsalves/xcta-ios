@@ -12,7 +12,7 @@ struct ProductsView<ViewModel: ProductsViewModelProtocol>: View {
     // MARK: - Private property
     
     @StateObject var viewModel: ViewModel
-    @EnvironmentObject var cart: Cart
+    @EnvironmentObject var cartViewModel: CartViewModel
     
     var body: some View {
         ZStack {
@@ -33,7 +33,10 @@ struct ProductsView<ViewModel: ProductsViewModelProtocol>: View {
                 ForEach(selectedProduct.availableSizes, id: \.title) { size in
                     Button(size.title) {
                         viewModel.setSelectedSize(size)
-                        viewModel.addProduct(to: cart)
+                        cartViewModel.addProduct(
+                            selectedProduct,
+                            size: size
+                        )
                     }
                 }
             }
@@ -65,19 +68,6 @@ struct ProductsView<ViewModel: ProductsViewModelProtocol>: View {
             service: Mockup(),
             viewData: ProductsViewData(
                 items: [
-                    Product(
-                        image: "https://d3l7rqep7l31az.cloudfront.net/images/products/20002605_615_catalog_1.jpg?1460136912",
-                        title: "Calça de Shopping",
-                        value: "$ 19,99",
-                        promotionalValue: "$ 9,99",
-                        availableSizes: [
-                            Product.Size(
-                                title: "P",
-                                sku: "000_P"
-                            )
-                        ],
-                        sale: true
-                    ),
                     Product(
                         image: "https://d3l7rqep7l31az.cloudfront.net/images/products/20002605_615_catalog_1.jpg?1460136912",
                         title: "Calça de Shopping",

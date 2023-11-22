@@ -9,45 +9,56 @@ import SwiftUI
 
 struct CartItemView: View {
     
-    var imageURL: String
-    var title: String
-    var price: String
-    var size: Product.Size
+    @Binding var item: CartItem
     
     var body: some View {
-        HStack(alignment: .top, spacing: 14) {
-            AsyncImage(url: URL(string: imageURL)) { phase in
+        HStack(spacing: 14) {
+            AsyncImage(url: URL(string: item.image)) { phase in
                 switch phase {
                 case .empty:
                     ZStack {
                         ProgressView()
                     }
-                    .frame(width: 100, height: 120)
+                    .frame(width: 80, height: 80)
                 case .success(let image):
                     image.resizable()
                          .aspectRatio(contentMode: .fit)
-                         .frame(width: 100, height: 120)
+                         .frame(width: 80, height: 80)
                 case .failure:
                     ZStack {
                         Image(systemName: "picture")
                     }
-                    .frame(width: 100, height: 120)
                 @unknown default:
                     EmptyView()
                 }
             }
-                    
             VStack(alignment: .leading) {
-                Text(title)
-                Spacer()
+                Text(item.title)
                 VStack(alignment: .leading) {
-                    Text(price)
-                        .strikethrough()
-                        .font(.caption)
+                    Text(item.price)
+                        .font(.title2)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
-            .frame(maxWidth: .infinity, maxHeight: 120, alignment: .leading)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            
+            HStack {
+                Button {
+                    print("+")
+                } label: {
+                    Image(systemName: "plus")
+                }
+                .padding()
+                
+                Text(String(item.quantity))
+                
+                Button {
+                    print("-")
+                } label: {
+                    Image(systemName: "minus")
+                }
+                .padding()
+            }
         }
         .padding()
     }
@@ -55,9 +66,14 @@ struct CartItemView: View {
 
 #Preview {
     CartItemView(
-        imageURL: "https://d3l7rqep7l31az.cloudfront.net/images/products/20002605_615_catalog_1.jpg?1460136912",
-        title: "Calça",
-        price: "$ 1,99",
-        size: Product.Size(title: "P", sku: "000_P")
+        item: .constant(
+            CartItem(
+                productId: UUID(),
+                image: "https://d3l7rqep7l31az.cloudfront.net/images/products/20002605_615_catalog_1.jpg?1460136912",
+                title: "Calça",
+                price: "$ 19,99",
+                size: Product.Size(title: "P", sku: "000_P")
+            )
+        )
     )
 }

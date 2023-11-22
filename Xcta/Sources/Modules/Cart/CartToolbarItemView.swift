@@ -9,22 +9,18 @@ import SwiftUI
 
 struct CartToolbarItemView: View {
     
-    @EnvironmentObject var cart: Cart
+    @EnvironmentObject var cartViewModel: CartViewModel
     
     var body: some View {
         NavigationLink(
             destination: {
-                CartView(
-                    viewModel: CartViewModel(
-                        viewData: CartViewData()
-                    )
-                )
-                .environmentObject(cart)
+                CartView()
+                .environmentObject(cartViewModel)
             },
             label: {
                 HStack {
                     Image(systemName: "cart")
-                    Text("\(cart.products.count)")
+                    Text("\(cartViewModel.products.count)")
                 }
             }
         )

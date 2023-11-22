@@ -7,34 +7,49 @@
 
 import SwiftUI
 
-struct CartView<ViewModel: CartViewModelProtocol>: View {
+struct CartView: View {
     
-    @ObservedObject var viewModel: ViewModel
-    @EnvironmentObject var cart: Cart
+    @EnvironmentObject var cart: CartViewModel
     
     var body: some View {
         ScrollView {
             VStack {
                 ForEach(cart.products, id: \.id) { item in
-//                    CartItemView(
-//                        imageURL: item.image,
-//                        title: item.title,
-//                        price: item.price,
-//                        size: item.size
-//                    )
-//                    .frame(maxWidth: .infinity)
+                    CartItemView(
+                        item: .constant(
+                            CartItem(
+                                productId: item.id,
+                                image: item.image,
+                                title: item.title,
+                                price: item.price,
+                                size: item.size
+                            )
+                        )  
+                    )
+                    .frame(maxWidth: .infinity)
                 }
             }
             .frame(maxWidth: .infinity)
         }
-        .navigationTitle(viewModel.viewData.viewTitle)
     }
 }
 
 #Preview {
-    CartView(
-        viewModel: CartViewModel(
-            viewData: CartViewData()
+    CartView()
+    .environmentObject(
+        CartViewModel(
+            products: [
+                CartItem(
+                    productId: UUID(),
+                    image: "https://d3l7rqep7l31az.cloudfront.net/images/products/20002605_615_catalog_1.jpg?1460136912",
+                    title: "Calça",
+                    price: "$ 1,99",
+                    size: Product.Size(
+                        title: "P", 
+                        sku: "00_P"
+                    )
+                )
+            ]
         )
     )
 }

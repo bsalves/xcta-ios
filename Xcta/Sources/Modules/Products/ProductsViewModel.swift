@@ -15,7 +15,6 @@ protocol ProductsViewModelProtocol: ObservableObject {
     func loadProducts() async
     func tapProduct(_ product: Product)
     func setSelectedSize(_ size: Product.Size)
-    func addProduct(to cart: Cart)
 }
 
 final class ProductsViewModel: ProductsViewModelProtocol {
@@ -63,21 +62,21 @@ final class ProductsViewModel: ProductsViewModelProtocol {
         selectedSize = size
     }
     
-    func addProduct(to cart: Cart) {
-        guard let selectedProduct, let selectedSize else { return }
-        cart.add(
-            product: CartItem(
-                productId: selectedProduct.id,
-                image: selectedProduct.image,
-                title: selectedProduct.title,
-                price: selectedProduct.promotionalValue ?? selectedProduct.value,
-                size: Product.Size(
-                    title: selectedSize.title,
-                    sku: selectedSize.sku
-                )
-            )
-        )
-    }
+//    func addProduct(to cart: Cart) {
+//        guard let selectedProduct, let selectedSize else { return }
+//        cart.add(
+//            product: CartItem(
+//                productId: selectedProduct.id,
+//                image: selectedProduct.image,
+//                title: selectedProduct.title,
+//                price: selectedProduct.promotionalValue ?? selectedProduct.value,
+//                size: Product.Size(
+//                    title: selectedSize.title,
+//                    sku: selectedSize.sku
+//                )
+//            )
+//        )
+//    }
     
     // MARK: - Private methods
     

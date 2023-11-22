@@ -10,7 +10,7 @@ import SwiftUI
 @main
 struct XctaApp: App {
     
-    var cart = Cart()
+    var cart = CartViewModel()
     
     var body: some Scene {
         WindowGroup {
