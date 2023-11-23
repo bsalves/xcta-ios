@@ -49,7 +49,7 @@ final class CartViewModel: ObservableObject {
         guard let productIndex = products.firstIndex(where: { item in
             item.size.sku == productToBeIncreased
         }) else { return }
-        products[productIndex].quantity += 1
+        products[productIndex].increase()
     }
     
     func removeProduct(_ sku: Sku) {
