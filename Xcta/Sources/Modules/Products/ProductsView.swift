@@ -90,8 +90,8 @@ struct ProductsView<ViewModel: ProductsViewModelProtocol>: View {
                     Product(
                         image: "https://d3l7rqep7l31az.cloudfront.net/images/products/20002605_615_catalog_1.jpg?1460136912",
                         title: "Calça de Shopping",
-                        value: "$ 19,99",
-                        promotionalValue: "$ 9,99",
+                        value: "R$ 19,99",
+                        promotionalValue: "R$ 9,99",
                         availableSizes: [
                             Product.Size(
                                 title: "P",

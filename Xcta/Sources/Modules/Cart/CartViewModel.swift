@@ -9,6 +9,8 @@ import Foundation
 
 final class CartViewModel: ObservableObject {
     
+    // MARK: - Publishers
+    
     @Published var products: [CartItem] {
         didSet {
             calcNumberOfItems()
@@ -19,10 +21,14 @@ final class CartViewModel: ObservableObject {
     @Published var numberOfItems: Int = 0
     @Published var amountTotal = String()
     
+    // MARK: - Initializer
+    
     init(products: [CartItem] = [CartItem](), viewData: CartViewData = CartViewData()) {
         self.products = products
         self.viewData = viewData
     }
+    
+    // MARK: - Internal methods
     
     func addProduct(_ product: Product, size: Product.Size) {
         guard let productToBeIncreased = products.first(where: { item in
