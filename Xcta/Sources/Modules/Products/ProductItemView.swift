@@ -49,10 +49,18 @@ struct ProductItemView: View {
     
     private var productInfoView: some View {
         VStack(alignment: .leading) {
+            if sale {
+                HStack {
+                    Text("Promoção!")
+                    Image(systemName: "tag")
+                }
+                .foregroundColor(.red)
+            }
             Text(title)
             Spacer()
             VStack(alignment: .leading) {
                 if let actualPrice, sale {
+                    
                     Text(regularPrice)
                         .strikethrough()
                         .font(.caption)

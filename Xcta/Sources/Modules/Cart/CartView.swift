@@ -27,6 +27,11 @@ struct CartView: View {
             .frame(maxWidth: .infinity)
         }
         .navigationTitle(viewModel.viewData.viewTitle)
+        .toolbar {
+            ToolbarItem {
+                Text("R$ \(viewModel.amountTotal)")
+            }
+        }
     }
 }
 

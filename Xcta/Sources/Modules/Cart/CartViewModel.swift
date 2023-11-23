@@ -10,10 +10,14 @@ import Foundation
 final class CartViewModel: ObservableObject {
     
     @Published var products: [CartItem] {
-        didSet { calcNumberOfItems() }
+        didSet {
+            calcNumberOfItems()
+            calcAmount()
+        }
     }
     @Published var viewData: CartViewData
     @Published var numberOfItems: Int = 0
+    @Published var amountTotal = String()
     
     init(products: [CartItem] = [CartItem](), viewData: CartViewData = CartViewData()) {
         self.products = products
@@ -54,5 +58,24 @@ final class CartViewModel: ObservableObject {
             sum += $0.quantity
         }
         numberOfItems = sum
+    }
+    
+    private func calcAmount() {
+        var amount: Double = 0
+        products.forEach {
+            amount += Double($0.price
+                .replacingOccurrences(of: "R$ ", with: "")
+                .replacingOccurrences(of: ".", with: "")
+                .replacingOccurrences(of: ",", with: ".")
+            ) ?? 0
+            amount *= Double($0.quantity)
+        }
+        
+        let formatter = NumberFormatter()
+        formatter.locale = Locale.current
+        formatter.numberStyle = .currency
+        if let formattedAmount = formatter.string(from: amount as NSNumber) {
+            amountTotal = formattedAmount
+        }
     }
 }
