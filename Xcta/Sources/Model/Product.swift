@@ -7,7 +7,10 @@
 
 import Foundation
 
+typealias Sku = String
+
 struct Product {
+    
     var id = UUID()
     var image: String
     var title: String
@@ -18,6 +21,6 @@ struct Product {
     
     struct Size {
         var title: String
-        var sku: String
+        var sku: Sku
     }
 }

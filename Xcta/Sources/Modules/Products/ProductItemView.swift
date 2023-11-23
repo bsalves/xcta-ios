@@ -14,61 +14,69 @@ struct ProductItemView: View {
     var regularPrice: String
     var actualPrice: String?
     var sizes: [String]
+    var sale: Bool
     
     var body: some View {
         HStack(alignment: .top, spacing: 14) {
-            AsyncImage(url: URL(string: imageURL)) { phase in
-                switch phase {
-                case .empty:
-                    ZStack {
-                        ProgressView()
-                    }
-                    .frame(width: 100, height: 120)
-                case .success(let image):
-                    image.resizable()
-                         .aspectRatio(contentMode: .fit)
-                         .frame(width: 100, height: 120)
-                case .failure:
-                    ZStack {
-                        Image(systemName: "picture")
-                    }
-                    .frame(width: 100, height: 120)
-                @unknown default:
-                    EmptyView()
-                }
-            }
-                    
-            VStack(alignment: .leading) {
-                Text(title)
-                Spacer()
-                VStack(alignment: .leading) {
-                    if let actualPrice {
-                        Text(regularPrice)
-                            .strikethrough()
-                            .font(.caption)
-                        Text(actualPrice)
-                            .font(.title2)
-                    } else {
-                        Text(regularPrice)
-                            .font(.title2)
-                        Spacer()
-                    }
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                Spacer()
-                HStack {
-                    ForEach(sizes, id: \.self) { size in
-                        ZStack {
-                            Text(size)
-                        }
-                        .frame(width: 26, height: 26)
-                        .border(Color.black)
-                    }
-                }
-            }
-            .frame(maxWidth: .infinity, maxHeight: 120, alignment: .leading)
+            productPhotoView
+            productInfoView
         }
         .padding()
+    }
+    
+    private var productPhotoView: some View {
+        AsyncImage(url: URL(string: imageURL)) { phase in
+            switch phase {
+            case .empty:
+                ZStack {
+                    ProgressView()
+                }
+                .frame(width: 100, height: 120)
+            case .success(let image):
+                image.resizable()
+                     .aspectRatio(contentMode: .fit)
+                     .frame(width: 100, height: 120)
+            case .failure:
+                ZStack {
+                    Image(systemName: "camera")
+                }
+                .frame(width: 100, height: 120)
+            @unknown default:
+                EmptyView()
+            }
+        }
+    }
+    
+    private var productInfoView: some View {
+        VStack(alignment: .leading) {
+            Text(title)
+            Spacer()
+            VStack(alignment: .leading) {
+                if let actualPrice, sale {
+                    Text(regularPrice)
+                        .strikethrough()
+                        .font(.caption)
+                    Text(actualPrice)
+                        .font(.title2)
+                } else {
+                    Text(regularPrice)
+                        .font(.title2)
+                    Spacer()
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            Spacer()
+            HStack {
+                ForEach(sizes, id: \.self) { size in
+                    ZStack {
+                        Text(size)
+                    }
+                    .frame(width: 26, height: 26)
+                    .border(Color.black)
+                }
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: 120, alignment: .leading)
     }
 }
 
@@ -78,6 +86,7 @@ struct ProductItemView: View {
         title: "Calça",
         regularPrice: "$ 1,99",
         actualPrice: "$ 0,99",
-        sizes: ["X", "P", "M"]
+        sizes: ["X", "P", "M"], 
+        sale: true
     )
 }

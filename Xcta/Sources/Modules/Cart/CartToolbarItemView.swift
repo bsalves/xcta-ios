@@ -20,7 +20,7 @@ struct CartToolbarItemView: View {
             label: {
                 HStack {
                     Image(systemName: "cart")
-                    Text("\(cartViewModel.products.count)")
+                    Text("\(cartViewModel.numberOfItems)")
                 }
             }
         )

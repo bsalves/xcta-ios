@@ -52,7 +52,8 @@ struct ProductsView<ViewModel: ProductsViewModelProtocol>: View {
                         title: item.title,
                         regularPrice: item.value,
                         actualPrice: item.promotionalValue,
-                        sizes: item.availableSizes.map { $0.title }
+                        sizes: item.availableSizes.map { $0.title },
+                        sale: item.sale
                     )
                     .onTapGesture { viewModel.tapProduct(item) }
                 }

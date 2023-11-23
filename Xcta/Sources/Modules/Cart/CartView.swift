@@ -9,28 +9,24 @@ import SwiftUI
 
 struct CartView: View {
     
-    @EnvironmentObject var cart: CartViewModel
+    @EnvironmentObject var viewModel: CartViewModel
     
     var body: some View {
         ScrollView {
             VStack {
-                ForEach(cart.products, id: \.id) { item in
+                ForEach($viewModel.products, id: \.id) { item in
                     CartItemView(
-                        item: .constant(
-                            CartItem(
-                                productId: item.id,
-                                image: item.image,
-                                title: item.title,
-                                price: item.price,
-                                size: item.size
-                            )
-                        )  
+                        item: item,
+                        removeItem: { sku in
+                            viewModel.removeProduct(sku)
+                        }
                     )
                     .frame(maxWidth: .infinity)
                 }
             }
             .frame(maxWidth: .infinity)
         }
+        .navigationTitle(viewModel.viewData.viewTitle)
     }
 }
 
@@ -43,6 +39,7 @@ struct CartView: View {
                     productId: UUID(),
                     image: "https://d3l7rqep7l31az.cloudfront.net/images/products/20002605_615_catalog_1.jpg?1460136912",
                     title: "Calça",
+                    quantity: 1,
                     price: "$ 1,99",
                     size: Product.Size(
                         title: "P", 
