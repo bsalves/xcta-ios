@@ -12,6 +12,7 @@ struct ProductsView<ViewModel: ProductsViewModelProtocol>: View {
     // MARK: - Private property
     
     @StateObject var viewModel: ViewModel
+    @State var presentPopover = false
     @EnvironmentObject var cartViewModel: CartViewModel
     
     var body: some View {
@@ -25,10 +26,27 @@ struct ProductsView<ViewModel: ProductsViewModelProtocol>: View {
                 Text(error.localizedDescription)
             }
         }
+        .toolbar {
+            ToolbarItemGroup(placement: .navigationBarTrailing) {
+                Menu {
+                    switch viewModel.filter {
+                    case .all:
+                        Button(action: { viewModel.filter = .sale }) {
+                            Text("Somente promoções")
+                        }
+                    case .sale:
+                        Button(action: { viewModel.filter = .all }) {
+                            Text("Mostrar tudo")
+                        }
+                    }
+                } label: {
+                    Label("Filtrar", systemImage: "line.3.horizontal.decrease.circle")
+                }
+            }
+        }
         .navigationTitle(viewModel.viewData.viewTitle)
         .task { await viewModel.loadProducts() }
         .confirmationDialog("Adicionar ao carrinho?", isPresented: $viewModel.showAlertAddCart) {
-            
             if let selectedProduct = viewModel.selectedProduct {
                 ForEach(selectedProduct.availableSizes, id: \.title) { size in
                     Button(size.title) {

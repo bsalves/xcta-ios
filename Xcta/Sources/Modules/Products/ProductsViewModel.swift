@@ -12,6 +12,7 @@ protocol ProductsViewModelProtocol: ObservableObject {
     var showAlertAddCart: Bool { get set }
     var selectedProduct: Product? { get set }
     var viewState: ViewState { get set }
+    var filter: ProductsViewModel.Filter { get set }
     func loadProducts() async
     func tapProduct(_ product: Product)
     func setSelectedSize(_ size: Product.Size)
@@ -19,9 +20,15 @@ protocol ProductsViewModelProtocol: ObservableObject {
 
 final class ProductsViewModel: ProductsViewModelProtocol {
     
+    enum Filter {
+        case all
+        case sale
+    }
+    
     // MARK: - Private properties
     
     private var service: ServiceWorker
+    var loadedProducts = [Product]()
     
     // MARK: - ViewState conforms
     
@@ -31,6 +38,9 @@ final class ProductsViewModel: ProductsViewModelProtocol {
     
     // MARK: - Internal properties
     
+    var filter: Filter = .all {
+        didSet { filter(filter) }
+    }
     @Published var viewData: ProductsViewData
     @Published var showAlertAddCart = false
     
@@ -62,23 +72,18 @@ final class ProductsViewModel: ProductsViewModelProtocol {
         selectedSize = size
     }
     
-//    func addProduct(to cart: Cart) {
-//        guard let selectedProduct, let selectedSize else { return }
-//        cart.add(
-//            product: CartItem(
-//                productId: selectedProduct.id,
-//                image: selectedProduct.image,
-//                title: selectedProduct.title,
-//                price: selectedProduct.promotionalValue ?? selectedProduct.value,
-//                size: Product.Size(
-//                    title: selectedSize.title,
-//                    sku: selectedSize.sku
-//                )
-//            )
-//        )
-//    }
-    
     // MARK: - Private methods
+    
+    private func filter(_ by: Filter) {
+        switch by {
+        case .all:
+            viewData.items = loadedProducts
+        case .sale:
+            viewData.items = loadedProducts.filter {
+                $0.sale == true
+            }
+        }
+    }
     
     @MainActor private func handleViewData(_ data: Data) throws {
         let list = try JSONDecoder().decode(ProductList.self, from: data)
@@ -99,5 +104,6 @@ final class ProductsViewModel: ProductsViewModelProtocol {
                 sale: $0.onSale
             )
         }
+        loadedProducts = viewData.items
     }
 }
