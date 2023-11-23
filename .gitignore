@@ -166,7 +166,6 @@ Dependencies/
 /*.gcno
 **/xcshareddata/WorkspaceSettings.xcsettings
 
-**/*.xcodeproj/*
 tags
 
 # LLDB Command Outputs
